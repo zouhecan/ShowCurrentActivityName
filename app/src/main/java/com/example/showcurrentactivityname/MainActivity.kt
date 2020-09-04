@@ -7,6 +7,7 @@ import android.preference.PreferenceManager
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
+import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.iosconfirm.IOSConfirm
@@ -18,8 +19,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ShowTopActivityWindowManager.sharePreference =
-            PreferenceManager.getDefaultSharedPreferences(this)
         ShowTopActivityWindowManager.window = TopActivityWindow(this)
         switchBtn.isChecked = false
         content.setOnClickListener {
@@ -78,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun show() {
         switchBtn.isChecked = true
-        ShowTopActivityWindowManager.window?.show(packageName + "\n" + "${this::class.java.canonicalName}")
+//        ShowTopActivityWindowManager.window?.show(packageName + "\n" + "${this::class.java.canonicalName}")
         ShowTopActivityWindowManager.updateTopActivityWindowStatus(true)
     }
 
@@ -131,5 +130,11 @@ class MainActivity : AppCompatActivity() {
             Log.v(logTag, "***ACCESSIBILITY IS DISABLED***")
         }
         return false
+    }
+
+    override fun onDestroy() {
+//        ShowTopActivityWindowManager.window?.dismiss()
+        super.onDestroy()
+        Log.d("zouhecan", "MainActivity onDestroy")
     }
 }

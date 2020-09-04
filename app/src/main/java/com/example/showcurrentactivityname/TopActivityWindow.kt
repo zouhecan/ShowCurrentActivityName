@@ -3,6 +3,7 @@ package com.example.showcurrentactivityname
 import android.content.Context
 import android.graphics.PixelFormat
 import android.os.Build
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,7 @@ class TopActivityWindow(var mContext: Context) {
         }
         if (ShowTopActivityWindowManager.checkFloatPermission(mContext)) {
             isShowing = true
+            Log.d("zouhecan", "windowManager add window")
             sWindowManager.addView(sView, sWindowParams)
         } else {
             dismiss()

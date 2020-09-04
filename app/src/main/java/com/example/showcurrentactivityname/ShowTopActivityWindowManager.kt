@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.DialogInterface
-import android.content.SharedPreferences
 import android.os.Binder
 import android.os.Build
 import android.os.Process
@@ -21,24 +20,9 @@ object ShowTopActivityWindowManager {
 
     var openTopActivityWindow = false
 
-    var sharePreference: SharedPreferences? = null
-
-    //存储是否开启状态的sp
-    private const val IS_TOP_ACTIVITY_WINDOW_ENABLE = "show_top_activity_window_enable"
-
-    fun checkTopActivityWindowStatus() {
-        openTopActivityWindow = sharePreference!!.getBoolean(
-            IS_TOP_ACTIVITY_WINDOW_ENABLE,
-            false
-        )
-    }
-
     @JvmStatic
     fun updateTopActivityWindowStatus(enable: Boolean) {
         openTopActivityWindow = enable
-        val editor = sharePreference!!.edit()
-        editor.putBoolean(IS_TOP_ACTIVITY_WINDOW_ENABLE, enable)
-        editor.apply()
     }
 
     /**
