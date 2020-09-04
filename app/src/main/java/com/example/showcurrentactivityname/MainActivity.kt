@@ -3,11 +3,9 @@ package com.example.showcurrentactivityname
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
-import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.iosconfirm.IOSConfirm
@@ -35,6 +33,34 @@ class MainActivity : AppCompatActivity() {
         startAccessibilityService()
     }
 
+    private var iosConfirm: IOSConfirm? = null
+
+    private fun showOpenAccessibilityServiceDialog() {
+        if (iosConfirm != null && iosConfirm!!.isShowing) {
+            return
+        }
+        iosConfirm = IOSConfirm.Builder(this)
+            .setMessage(this.resources.getString(R.string.open_accessibility_service))
+            .setPositiveButton(this.resources.getString(R.string.go_to_grant_permission)) { dialog: DialogInterface, _: Int ->
+                val intent = Intent()
+                intent.action = "android.settings.ACCESSIBILITY_SETTINGS"
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNegativeButton(this.resources.getString(R.string.cancel)) { dialog: DialogInterface, _: Int ->
+                Toast.makeText(
+                    this,
+                    this.resources.getString(R.string.open_accessibility_service),
+                    Toast.LENGTH_SHORT
+                ).show()
+                dialog.dismiss()
+            }
+            .createConfirm()
+        iosConfirm!!.setCancelable(false)
+        iosConfirm!!.show()
+    }
+
+
     private fun startAccessibilityService() {
         ShowTopActivityWindowManager.requestOverlayWindowPermission(
             this,
@@ -43,25 +69,7 @@ class MainActivity : AppCompatActivity() {
                     if (isAccessibilitySettingsOn()) {
                         show()
                     } else {
-                        val iosConfirm: IOSConfirm = IOSConfirm.Builder(this)
-                            .setMessage(resources.getString(R.string.open_accessibility_service))
-                            .setPositiveButton(resources.getString(R.string.go_to_grant_permission)) { dialog: DialogInterface, _: Int ->
-                                val intent = Intent()
-                                intent.action = "android.settings.ACCESSIBILITY_SETTINGS"
-                                startActivity(intent)
-                                dialog.dismiss()
-                            }
-                            .setNegativeButton(resources.getString(R.string.cancel)) { dialog: DialogInterface, _: Int ->
-                                Toast.makeText(
-                                    this,
-                                    "" + getString(R.string.open_accessibility_service),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                dialog.dismiss()
-                            }
-                            .createConfirm()
-                        iosConfirm.setCancelable(false)
-                        iosConfirm.show()
+                        showOpenAccessibilityServiceDialog()
                         dismiss()
                     }
                 } else {
@@ -130,11 +138,5 @@ class MainActivity : AppCompatActivity() {
             Log.v(logTag, "***ACCESSIBILITY IS DISABLED***")
         }
         return false
-    }
-
-    override fun onDestroy() {
-//        ShowTopActivityWindowManager.window?.dismiss()
-        super.onDestroy()
-        Log.d("zouhecan", "MainActivity onDestroy")
     }
 }

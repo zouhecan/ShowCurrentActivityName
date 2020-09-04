@@ -44,7 +44,6 @@ class TopActivityWindow(var mContext: Context) {
         }
         if (ShowTopActivityWindowManager.checkFloatPermission(mContext)) {
             isShowing = true
-            Log.d("zouhecan", "windowManager add window")
             sWindowManager.addView(sView, sWindowParams)
         } else {
             dismiss()
