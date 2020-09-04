@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.iosconfirm.IOSConfirm
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     private val logTag = MainActivity::class.java.canonicalName
@@ -138,5 +139,10 @@ class MainActivity : AppCompatActivity() {
             Log.v(logTag, "***ACCESSIBILITY IS DISABLED***")
         }
         return false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        exitProcess(-1)
     }
 }
