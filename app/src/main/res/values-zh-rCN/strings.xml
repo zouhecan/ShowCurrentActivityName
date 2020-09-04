@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">观测活动</string>
+    <string name="app_slogan">在当前页面的窗口上显示活动名称，不会对app产生任何影响。</string>
+    <string name="popup_window_permission_tips">请先授予悬浮窗权限</string>
+    <string name="go_to_grant_permission">去开启</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确认</string>
+    <string name="open_accessibility_service">辅助服务未打开，请在设置中打开：辅助功能->无障碍-></string>
+</resources>
