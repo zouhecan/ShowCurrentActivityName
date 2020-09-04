@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">观测活动</string>
+    <string name="start_now">开启观测，在当前页面的窗口上显示活动名称</string>
     <string name="app_slogan">在当前页面的窗口上显示活动名称，不会对app产生任何影响。</string>
     <string name="popup_window_permission_tips">请先授予悬浮窗权限</string>
     <string name="go_to_grant_permission">去开启</string>

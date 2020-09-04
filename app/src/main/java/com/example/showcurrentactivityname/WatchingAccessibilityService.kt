@@ -12,7 +12,7 @@ internal class WatchingAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            Log.d("event", event.toString())
+            Log.i("Watching event", "$event\n==================================================\n")
             ShowTopActivityWindowManager.window?.show(getInfo(event))
         }
     }
@@ -22,7 +22,7 @@ internal class WatchingAccessibilityService : AccessibilityService() {
 
     private fun getInfo(event: AccessibilityEvent): String {
         if (event.className.isNullOrEmpty()) {
-            return event.packageName.toString()
+            return ""
         }
         if (isActivity(event)) {
             currentActivityName = event.className.toString()
