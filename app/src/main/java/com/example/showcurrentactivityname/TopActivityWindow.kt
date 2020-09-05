@@ -21,16 +21,14 @@ class TopActivityWindow(var mContext: Context) {
         0x18,
         PixelFormat.TRANSLUCENT
     )
-    private var sWindowManager: WindowManager =
-        mContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private var sWindowManager: WindowManager = mContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var sView: View
     private var textView: TextView
     private var isShowing = false
 
     init {
         sWindowParams.gravity = Gravity.START + Gravity.TOP
-        sView = LayoutInflater.from(mContext)
-            .inflate(R.layout.debug_top_activity_window, null)
+        sView = LayoutInflater.from(mContext).inflate(R.layout.debug_top_activity_window, null)
         textView = sView.findViewById(R.id.text)
     }
 

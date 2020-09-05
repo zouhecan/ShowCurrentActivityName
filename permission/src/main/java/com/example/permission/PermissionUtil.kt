@@ -54,7 +54,7 @@ class PermissionUtil {
             if (activity == null || activity.isFinishing) {
                 return
             }
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP || checkUsageStatsPermissionInner(activity)) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1 || checkUsageStatsPermissionInner(activity)) {
                 callBack?.onPermissionsGranted(true, mutableListOf())
                 return
             }

@@ -1,5 +1,6 @@
 package com.example.showcurrentactivityname
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -72,8 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun show() {
         switchBtn.isChecked = true
-        Log.d("zouhecan", "阔以噶事了")
-//        ShowTopActivityWindowManager.window?.show(packageName + "\n" + "${this::class.java.canonicalName}")
+        startService(Intent(this, WatchingService::class.java))
         ShowTopActivityWindowManager.updateTopActivityWindowStatus(true)
     }
 
