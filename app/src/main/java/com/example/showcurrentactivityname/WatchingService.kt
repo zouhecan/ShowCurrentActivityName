@@ -21,7 +21,7 @@ class WatchingService : Service() {
     private val mHandler = Handler()
     private var mActivityManager: ActivityManager? = null
     private var timer: Timer? = null
-    private val logTag = "zouhecan"
+    private val logTag = WatchingService::class.java.canonicalName
 
     override fun onCreate() {
         super.onCreate()
@@ -50,8 +50,10 @@ class WatchingService : Service() {
             applicationContext, 1, restartServiceIntent,
             PendingIntent.FLAG_ONE_SHOT
         )
-        val alarmService = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmService[AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500] = restartServicePendingIntent
+        val alarmService =
+            applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmService[AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500] =
+            restartServicePendingIntent
         super.onTaskRemoved(rootIntent)
     }
 
@@ -63,7 +65,7 @@ class WatchingService : Service() {
             }
             Log.i(logTag, "top running app is : $name")
             mHandler.post {
-               MainActivity.topActivityWindow?.show(name)
+                MainActivity.topActivityWindow?.show(name)
             }
         }
     }
@@ -71,7 +73,8 @@ class WatchingService : Service() {
     private fun getCurrentActivityName(): String? {
         var topActivity = ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            val mUsageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+            val mUsageStatsManager =
+                getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
             val now = System.currentTimeMillis()
             val events = mUsageStatsManager.queryEvents(now - 1000, now)
             while (events.hasNextEvent()) {
@@ -84,9 +87,11 @@ class WatchingService : Service() {
                 }
             }
         } else {
-            val activityManager = applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val activityManager =
+                applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val forGroundActivity = activityManager.getRunningTasks(1)
-            topActivity = forGroundActivity[0].topActivity!!.packageName + "\n" + forGroundActivity[0].topActivity!!.className
+            topActivity =
+                forGroundActivity[0].topActivity!!.packageName + "\n" + forGroundActivity[0].topActivity!!.className
         }
         return topActivity
     }
