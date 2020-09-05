@@ -42,13 +42,13 @@ class TopActivityWindow(var mContext: Context) {
         if (isShowing) {
             return
         }
-        if (ShowTopActivityWindowManager.checkFloatPermission(mContext)) {
-            isShowing = true
-            sWindowManager.addView(sView, sWindowParams)
-        } else {
-            dismiss()
-            ShowTopActivityWindowManager.updateTopActivityWindowStatus(false)
-        }
+//        if (ShowTopActivityWindowManager.checkFloatPermission(mContext)) {
+//            isShowing = true
+//            sWindowManager.addView(sView, sWindowParams)
+//        } else {
+//            dismiss()
+//            ShowTopActivityWindowManager.updateTopActivityWindowStatus(false)
+//        }
     }
 
     fun dismiss() {

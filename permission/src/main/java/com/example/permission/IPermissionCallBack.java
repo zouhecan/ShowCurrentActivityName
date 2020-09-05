@@ -1,4 +1,4 @@
-package com.example.showcurrentactivityname;
+package com.example.permission;
 
 import java.util.List;
 

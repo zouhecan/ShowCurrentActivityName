@@ -1,14 +1,11 @@
 package com.example.showcurrentactivityname
 
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
-import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.iosconfirm.IOSConfirm
+import com.example.permission.IPermissionCallBack
+import com.example.permission.PermissionUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.system.exitProcess
 
@@ -29,50 +26,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var isRequesting = false
+
     override fun onResume() {
         super.onResume()
+        if (isRequesting) {
+            return
+        }
         startAccessibilityService()
     }
 
-    private var iosConfirm: IOSConfirm? = null
-
-    private fun showOpenAccessibilityServiceDialog() {
-        if (iosConfirm != null && iosConfirm!!.isShowing) {
-            return
-        }
-        iosConfirm = IOSConfirm.Builder(this)
-            .setMessage(this.resources.getString(R.string.open_accessibility_service))
-            .setPositiveButton(this.resources.getString(R.string.go_to_grant_permission)) { dialog: DialogInterface, _: Int ->
-                val intent = Intent()
-                intent.action = "android.settings.ACCESSIBILITY_SETTINGS"
-                startActivity(intent)
-                dialog.dismiss()
-            }
-            .setNegativeButton(this.resources.getString(R.string.cancel)) { dialog: DialogInterface, _: Int ->
-                Toast.makeText(
-                    this,
-                    this.resources.getString(R.string.open_accessibility_service),
-                    Toast.LENGTH_SHORT
-                ).show()
-                dialog.dismiss()
-            }
-            .createConfirm()
-        iosConfirm!!.setCancelable(false)
-        iosConfirm!!.show()
-    }
-
-
     private fun startAccessibilityService() {
-        ShowTopActivityWindowManager.requestOverlayWindowPermission(
+        isRequesting = true
+        PermissionUtil.requestOverlayWindowPermission(
             this,
             IPermissionCallBack { grantedAll, _ ->
                 if (grantedAll) {
-                    if (isAccessibilitySettingsOn()) {
-                        show()
-                    } else {
-                        showOpenAccessibilityServiceDialog()
-                        dismiss()
-                    }
+                    requestUsageStats()
                 } else {
                     dismiss()
                     Toast.makeText(
@@ -84,8 +54,25 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
+    private fun requestUsageStats() {
+        PermissionUtil.requestUsageStatsPermission(this, IPermissionCallBack { grantedAll, _ ->
+            if (grantedAll) {
+                show()
+            } else {
+                dismiss()
+                Toast.makeText(
+                    this,
+                    getString(R.string.open_usage_stats_permission_tips) + getString(R.string.app_name),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            isRequesting = false
+        })
+    }
+
     private fun show() {
         switchBtn.isChecked = true
+        Log.d("zouhecan", "阔以噶事了")
 //        ShowTopActivityWindowManager.window?.show(packageName + "\n" + "${this::class.java.canonicalName}")
         ShowTopActivityWindowManager.updateTopActivityWindowStatus(true)
     }
@@ -94,51 +81,6 @@ class MainActivity : AppCompatActivity() {
         switchBtn.isChecked = false
         ShowTopActivityWindowManager.window?.dismiss()
         ShowTopActivityWindowManager.updateTopActivityWindowStatus(false)
-    }
-
-    private fun isAccessibilitySettingsOn(): Boolean {
-        var accessibilityEnabled = 0
-        val service: String =
-            this.packageName + "/" + WatchingAccessibilityService::class.java.canonicalName
-        try {
-            accessibilityEnabled = Settings.Secure.getInt(
-                applicationContext.contentResolver,
-                Settings.Secure.ACCESSIBILITY_ENABLED
-            )
-            Log.v(logTag, "accessibilityEnabled = $accessibilityEnabled")
-        } catch (e: Settings.SettingNotFoundException) {
-            Log.e(
-                logTag, "Error finding setting, default accessibility to not found: "
-                        + e.message
-            )
-        }
-        val mStringColonSplitter = TextUtils.SimpleStringSplitter(':')
-        if (accessibilityEnabled == 1) {
-            val settingValue = Settings.Secure.getString(
-                applicationContext.contentResolver,
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-            )
-            if (settingValue != null) {
-                mStringColonSplitter.setString(settingValue)
-                while (mStringColonSplitter.hasNext()) {
-                    val accessibilityService = mStringColonSplitter.next()
-                    Log.v(
-                        logTag,
-                        "-------------- > accessibilityService :: $accessibilityService $service"
-                    )
-                    if (accessibilityService.equals(service, ignoreCase = true)) {
-                        Log.v(
-                            logTag,
-                            "We've found the correct setting - accessibility is switched on!"
-                        )
-                        return true
-                    }
-                }
-            }
-        } else {
-            Log.v(logTag, "***ACCESSIBILITY IS DISABLED***")
-        }
-        return false
     }
 
     override fun onDestroy() {
