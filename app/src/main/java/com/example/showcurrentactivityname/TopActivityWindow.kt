@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import com.example.permission.PermissionUtil
 
 /**
  * desc: 显示栈顶activity名称的window
@@ -40,13 +41,12 @@ class TopActivityWindow(var mContext: Context) {
         if (isShowing) {
             return
         }
-//        if (ShowTopActivityWindowManager.checkFloatPermission(mContext)) {
-//            isShowing = true
-//            sWindowManager.addView(sView, sWindowParams)
-//        } else {
-//            dismiss()
-//            ShowTopActivityWindowManager.updateTopActivityWindowStatus(false)
-//        }
+        if (PermissionUtil.checkFloatPermission(mContext)) {
+            isShowing = true
+            sWindowManager.addView(sView, sWindowParams)
+        } else {
+            dismiss()
+        }
     }
 
     fun dismiss() {
